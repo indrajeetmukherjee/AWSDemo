@@ -31,7 +31,7 @@ jobs:
         USER: ${{ secrets.EC2_USER }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
+        chmod 400 private_key.pem
         scp -i private_key.pem build/libs/*.jar $USER@$HOST:/home/$USER/app.jar
 
     - name: Restart Application on EC2
