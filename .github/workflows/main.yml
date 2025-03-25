@@ -27,7 +27,9 @@ jobs:
     - name: Add EC2 Host to Known Hosts
       env:
         HOST: ${{ secrets.EC2_HOST }}
-      run: ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
     - name: Transfer JAR to EC2
       env:
