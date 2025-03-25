@@ -24,6 +24,11 @@ jobs:
         chmod +x gradlew
         ./gradlew bootJar
 
+    - name: Add EC2 Host to Known Hosts
+      env:
+        HOST: ${{ secrets.EC2_HOST }}
+      run: ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+
     - name: Transfer JAR to EC2
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
@@ -31,8 +36,8 @@ jobs:
         USER: ${{ secrets.EC2_USER }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
-        chmod 400 private_key.pem
-        scp -i private_key.pem build/libs/*.jar $USER@$HOST:/home/$USER/app.jar
+        chmod 600 private_key.pem
+        scp -o StrictHostKeyChecking=no -i private_key.pem build/libs/*.jar $USER@$HOST:/home/$USER/app.jar
 
     - name: Restart Application on EC2
       env:
@@ -40,7 +45,7 @@ jobs:
         HOST: ${{ secrets.EC2_HOST }}
         USER: ${{ secrets.EC2_USER }}
       run: |
-        ssh -i private_key.pem $USER@$HOST << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
           sudo pkill -f 'java -jar' || true
           nohup java -jar /home/$USER/app.jar > /home/$USER/app.log 2>&1 &
           exit
