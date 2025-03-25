@@ -21,7 +21,7 @@ jobs:
 
     - name: Build Spring Boot Application
       run: |
-        chmod +x mvnw
+        chmod +x gradlew
         ./gradlew bootJar
 
     - name: Transfer JAR to EC2
