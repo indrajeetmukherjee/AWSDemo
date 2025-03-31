@@ -29,6 +29,7 @@ jobs:
       env:
         HOST: ${{ secrets.EC2_2_HOST }}
       run: |
+        mkdir -p ~/.ssh
         ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
     - name: Transfer JAR to EC2-2
