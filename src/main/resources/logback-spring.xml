@@ -1,10 +1,12 @@
 <configuration>
-    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:5000</destination>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>application.log</file>
+        <encoder>
+            <pattern>{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}", "level":"%p", "logger":"%c", "message":"%m"}%n</pattern>
+        </encoder>
     </appender>
 
     <root level="info">
-        <appender-ref ref="logstash"/>
+        <appender-ref ref="FILE" />
     </root>
 </configuration>
